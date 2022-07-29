@@ -29,7 +29,10 @@ func main()  {
 	}
 
 	//SEND some data 
-	_, err = connection.Write([]byte("Hello server! Greetings."))
+	// _, err = connection.Write([]byte("Hello server! Greetings."))
+	clientSideProtocol()
+
+
 		//create buffer where incoming messages can be saved
 	buffer := make([]byte, 1024)
 	//READ from the buffer and store the contents either in mLen or within error
@@ -45,4 +48,11 @@ func main()  {
 	//CLOSE connection
 	defer connection.Close()
 
+}
+
+func clientSideProtocol()  {
+	fmt.Println("Connection Established")
+	fmt.Println("Your account balance is : £100 ")
+	fmt.Println("Enter the following TRANSACTION options with the value example:\n 1) Deposit £---\n 2) Withdraw £--- \n 3) Transfer userX £--- ")
+	
 }
