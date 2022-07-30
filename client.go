@@ -28,30 +28,27 @@ func main()  {
 		panic(err)
 	}
 
-	//SEND some data 
-	// _, err = connection.Write([]byte("Hello server! Greetings."))
-	clientSideProtocol()
-
-
-		//create buffer where incoming messages can be saved
-	buffer := make([]byte, 1024)
-	//READ from the buffer and store the contents either in mLen or within error
-	mLen, err := connection.Read(buffer)
-		// if there is error display the error
-	if err != nil {
-		fmt.Println("Error reading:", err.Error())
-	}
-
-		//Display the the contents from the server
-	fmt.Println("Received: ", string(buffer[:mLen]))
-
+	clientSideProtocol(connection)
 	//CLOSE connection
 	defer connection.Close()
 
 }
 
-func clientSideProtocol()  {
-	fmt.Println("Connection Established")
+func clientSideProtocol(connection net.Conn)  {
+	//create buffer where incoming messages can be saved
+	buffer := make([]byte, 1024)
+	//READ from the buffer and store the contents either in mLen or within error
+	mLen, err := connection.Read(buffer)
+	// if there is error display the error
+	if err != nil {
+		fmt.Println("Error reading:", err.Error())
+	}
+	//Gets message from server regarding connection establishment
+	fmt.Println("Received: ", string(buffer[:mLen]))
+	
+	//SEND some data 
+	// _, err = connection.Write([]byte("Hello server! Greetings."))
+	
 	fmt.Println("Your account balance is : £100 ")
 	fmt.Println("Enter the following TRANSACTION options with the value example:\n 1) Deposit £---\n 2) Withdraw £--- \n 3) Transfer userX £--- ")
 	

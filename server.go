@@ -44,27 +44,30 @@ func main()  {
 				fmt.Println("Error accepting: ", err.Error())
 				os.Exit(1)
 		}
-		fmt.Println("client connected")
+		
 		// the communication should be according to the protocol
-		go agreedProtocol(connection)
+		go serverSideProtocol(connection)
 	}
 }
 
 //conn is an interface that allows to write and read data to and from the connection
-func agreedProtocol(connection net.Conn){
-	//created an empty array called buffer
-	buffer := make([]byte, 1024)
-	//read from connection put the contents in buffer
-	// the buffer will contain message or the error
-	mLen, err:= connection.Read(buffer)
-
+func serverSideProtocol(connection net.Conn){
+	
+	//Server talks first and informs client about connection establishment
+	_, err := connection.Write([]byte("Hello client we are now connected"))
 	if err!= nil {
 		fmt.Println("Error reading: " , err.Error() )
 	}
+	//created an empty array called buffer
+	// buffer := make([]byte, 1024)
+	//read from connection put the contents in buffer
+	// the buffer will contain message or the error
+	// mLen, err:= connection.Read(buffer)
+
 	//if no errors then display the contents of message
-	fmt.Println("Received: ", string(buffer[:mLen]))
+	// fmt.Println("Received: ", string(buffer[:mLen]))
 	//write the contents of buffer back to the connection
-	_, err = connection.Write([]byte("Thanks! Got your message: " + string(buffer[:mLen])))
+	// _, err = connection.Write([]byte("Thanks! Got your message: " + string(buffer[:mLen])))
 
 	connection.Close()
 }
