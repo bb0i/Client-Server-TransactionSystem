@@ -48,8 +48,19 @@ func clientSideProtocol(connection net.Conn)  {
 	
 	//SEND some data 
 	// _, err = connection.Write([]byte("Hello server! Greetings."))
-	
 	fmt.Println("Your account balance is : £100 ")
 	fmt.Println("Enter the following TRANSACTION options with the value example:\n 1) Deposit £---\n 2) Withdraw £--- \n 3) Transfer userX £--- ")
 	
+	//user enters an input
+	for {
+		var userInput string
+		fmt.Scanln(&userInput)
+		if(userInput !=""){
+			fmt.Println("SENDING: " +userInput  )
+			_, err =connection.Write([]byte(userInput))
+	}
+		mLen, err = connection.Read(buffer)	
+		fmt.Println("Received: ", string(buffer[:mLen]))
+	}
+
 }

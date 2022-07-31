@@ -58,17 +58,21 @@ func serverSideProtocol(connection net.Conn){
 	if err!= nil {
 		fmt.Println("Error reading: " , err.Error() )
 	}
+
 	//created an empty array called buffer
-	// buffer := make([]byte, 1024)
+	buffer := make([]byte, 1024)
 	//read from connection put the contents in buffer
 	// the buffer will contain message or the error
-	// mLen, err:= connection.Read(buffer)
+	mLen, err:= connection.Read(buffer)
 
 	//if no errors then display the contents of message
-	// fmt.Println("Received: ", string(buffer[:mLen]))
+	fmt.Println("Received: ", string(buffer[:mLen]))
 	//write the contents of buffer back to the connection
-	// _, err = connection.Write([]byte("Thanks! Got your message: " + string(buffer[:mLen])))
+	_, err = connection.Write([]byte(string(buffer[:mLen])))
 
 	connection.Close()
 }
 
+func serverStates()  {
+	
+}
