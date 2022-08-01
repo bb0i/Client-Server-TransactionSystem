@@ -8,6 +8,7 @@ import (
 	//net package provides the necessary API to implement socket communication
 	"net"
 	"fmt"
+	
 )
 
 const (
@@ -54,13 +55,18 @@ func clientSideProtocol(connection net.Conn)  {
 	//user enters an input
 	for {
 		var userInput string
-		fmt.Scanln(&userInput)
+		//takes in the input in double quotes, allows to accept input like deposit 100 as 1 input rather than 2
+		fmt.Scanf("%q", &userInput)
 		if(userInput !=""){
 			fmt.Println("SENDING: " +userInput  )
 			_, err =connection.Write([]byte(userInput))
-	}
-		mLen, err = connection.Read(buffer)	
-		fmt.Println("Received: ", string(buffer[:mLen]))
+			mLen, err = connection.Read(buffer)	
+			fmt.Println("Received: ", string(buffer[:mLen]))
+		}
+		if(string(buffer[:mLen])=="bye"){
+			break
+		}
+		
 	}
 
 }
