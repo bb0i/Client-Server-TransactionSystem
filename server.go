@@ -6,10 +6,12 @@ package main
 // continue listening to port 
 // once the connection is closed, the server stops listening and exits
 
+//TODO: NEED TO FIX THE PROTOCOL
 import (
 	"fmt"
 	"net"
 	"os"
+	"strings"
 )
 
 const (
@@ -17,6 +19,12 @@ const (
 	SERVER_PORT ="9988"
 	SERVER_TYPE ="tcp"
 )
+
+
+type User struct  {
+	userName string
+	accountBalance int
+}
 
 func main()  {
 	fmt.Println("Server up and running")
@@ -52,7 +60,11 @@ func main()  {
 
 //conn is an interface that allows to write and read data to and from the connection
 func serverSideProtocol(connection net.Conn){
-	
+	//load up usernames from temp db
+	var userA = User{"UserA", 100}
+	// var userB = User{"UserB", 100}
+	// var userC= User{"UserC", 100}
+
 	//Server talks first and informs client about connection establishment
 	_, err := connection.Write([]byte("Hello client we are now connected"))
 	if err!= nil {
@@ -69,23 +81,38 @@ func serverSideProtocol(connection net.Conn){
 			fmt.Println("Error reading: " , err.Error() )
 		}
 
+		var msg = string(buffer[:mLen])
+
 		//if no errors then display the contents of message
-		fmt.Println("Received: ", string(buffer[:mLen]))
-		if (string(buffer[:mLen])=="bye"){
+		fmt.Println("Received: ", msg)
+		if (msg=="bye"){
 			_, err = connection.Write([]byte(string(buffer[:mLen])))
 			break
 		}
-		//write the contents of buffer back to the connection
-		_, err = connection.Write([]byte(string(buffer[:mLen])))
+		
+		// serverStates(connection)
+		switch msg {
+			case strings.Contains("Deposit"):
+				_, err = connection.Write([]byte("Deposited money"))
+
+			default:
+				_, err = connection.Write([]byte("wrong input!\n Enter the following TRANSACTION options with the value example:\n 1) Deposit £---\n 2) Withdraw £--- \n 3) Transfer userX £--- "))
+		
+		
 	}
 
 	connection.Close()
 }
 
-
-func serverStates(i int)  {
-	switch i {
-	case 1:
-		
-	}
 }
+
+// func serverStates(connection net.Conn)  {
+// 	//write the contents of buffer back to the connection
+// 	_, err = connection.Write([]byte(string(buffer[:mLen])))
+// 	switch i {
+// 	case 1:
+	
+// 	default: 
+
+// 	}
+// }

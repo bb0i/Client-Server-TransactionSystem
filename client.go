@@ -64,9 +64,11 @@ func clientSideProtocol(connection net.Conn)  {
 			fmt.Println("Received: ", string(buffer[:mLen]))
 		}
 		if(string(buffer[:mLen])=="bye"){
+		
 			break
 		}
 		
 	}
 
 }
+
