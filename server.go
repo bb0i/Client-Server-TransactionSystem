@@ -18,8 +18,15 @@ const (
 	SERVER_HOST ="localhost"
 	SERVER_PORT ="9988"
 	SERVER_TYPE ="tcp"
+	// INITIAL_STATE = 0
+	TRANSACTION_STATE =1
+	DEPOSIT_STATE=2
+	WITHDRAW_STATE =3
+	TRANSFER_STATE =4
+	WRONG_INPUT_STATE=5
 )
 
+var state int = TRANSACTION_STATE
 
 type User struct  {
 	userName string
@@ -61,7 +68,7 @@ func main()  {
 //conn is an interface that allows to write and read data to and from the connection
 func serverSideProtocol(connection net.Conn){
 	//load up usernames from temp db
-	var userA = User{"UserA", 100}
+	// var userA = User{"UserA", 100}
 	// var userB = User{"UserB", 100}
 	// var userC= User{"UserC", 100}
 
@@ -89,30 +96,32 @@ func serverSideProtocol(connection net.Conn){
 			_, err = connection.Write([]byte(string(buffer[:mLen])))
 			break
 		}
-		
-		// serverStates(connection)
-		switch msg {
-			case strings.Contains("Deposit"):
-				_, err = connection.Write([]byte("Deposited money"))
+		var output = transactionStates(msg)
+		_, err =connection.Write([]byte(output))
 
-			default:
-				_, err = connection.Write([]byte("wrong input!\n Enter the following TRANSACTION options with the value example:\n 1) Deposit £---\n 2) Withdraw £--- \n 3) Transfer userX £--- "))
-		
-		
+}
+connection.Close()
+
+}
+
+func transactionStates(msg string) string  {
+	//write the contents of buffer back to the connection
+	var theOutput string 
+	
+	//check what user wants to do 
+	if strings.Contains("Deposit", msg){
+		//TODO: deposit money
+		theOutput= "Deposited"
+	} else if strings.Contains("Withdraw", msg ){
+		//TODO: withdraw money
+		theOutput ="Withdrawed"
+	} else if strings.Contains("Transfer", msg ){
+		//TODO: transfer money
+		theOutput ="Transfered"
+	}	else{
+		theOutput ="wrong transaction option!"
 	}
 
-	connection.Close()
-}
-
-}
-
-// func serverStates(connection net.Conn)  {
-// 	//write the contents of buffer back to the connection
-// 	_, err = connection.Write([]byte(string(buffer[:mLen])))
-// 	switch i {
-// 	case 1:
 	
-// 	default: 
-
-// 	}
-// }
+	return theOutput
+}
