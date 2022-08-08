@@ -2,7 +2,9 @@ package sharedStringsFunc
 
 import ("strings"
 "fmt"
-"errors")
+"errors"
+"strconv"
+)
 // ||(!DoesContain(lMsg,"withdraw"))|| (!DoesContain(lMsg,"transfer"))
 
 
@@ -32,4 +34,12 @@ func SplitAtSpace(msg string) (string, string){
 
 func DoesContain(msg string, word string) bool{
 	return strings.Contains(msg, word)
+}
+
+func StringToFloat(msg string)(float64, error){
+	amount, err := strconv.ParseFloat(msg, 64)
+	if err != nil {
+		return 0.00, errors.New("can not convert your number")
+	}
+	return amount, nil 
 }

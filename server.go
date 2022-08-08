@@ -109,7 +109,7 @@ func transactionStates(msg string) string  {
 	var theOutput string 
 	// fmt.Println("iamhere")
 
-	transactionOperation, amount, err := sharedStringsFunc.SplitString(msg)
+	transactionOperation, amountInString, err := sharedStringsFunc.SplitString(msg)
 	if err !=nil{
 		theOutput ="wrong transaction option!"
 	}
@@ -117,16 +117,32 @@ func transactionStates(msg string) string  {
 	//check what user wants to do 
 	if transactionOperation =="deposit"{
 		//TODO: deposit money
-		
-		theOutput= amount
+		amount, err := sharedStringsFunc.StringToFloat(amountInString)
+		if err != nil {
+			theOutput= "your amount cannot be processed"
+		}
+		fmt.Println(amount)
+		theOutput= amountInString
+
 	} else if transactionOperation =="withdraw"{
 		//TODO: withdraw money
-		theOutput= amount
+		amount, err := sharedStringsFunc.StringToFloat(amountInString)
+		if err != nil {
+			theOutput= "your amount cannot be processed"
+		}
+		fmt.Println(amount)
+		theOutput= amountInString
+
 	} else if transactionOperation =="transfer"{
-		fmt.Println(amount +"this is println")
-		transferAmount, user := sharedStringsFunc.SplitAtSpace(amount)
+		transferAmount, user := sharedStringsFunc.SplitAtSpace(amountInString)
+		amount, err := sharedStringsFunc.StringToFloat(transferAmount)
+		if err != nil {
+			theOutput= "your amount cannot be processed"
+		}
+		fmt.Println(amount)
 		//TODO: transfer money
 		theOutput= transferAmount +"to" +user
+
 	}else{
 		theOutput ="wrong transaction option!"
 	}
@@ -134,3 +150,4 @@ func transactionStates(msg string) string  {
 	
 	return theOutput
 }
+
