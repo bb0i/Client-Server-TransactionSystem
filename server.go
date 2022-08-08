@@ -11,22 +11,22 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"strings"
+	"transaction-app/sharedStringsFunc"
 )
 
 const (
 	SERVER_HOST ="localhost"
 	SERVER_PORT ="9988"
 	SERVER_TYPE ="tcp"
-	// INITIAL_STATE = 0
-	TRANSACTION_STATE =1
-	DEPOSIT_STATE=2
-	WITHDRAW_STATE =3
-	TRANSFER_STATE =4
-	WRONG_INPUT_STATE=5
+	// // INITIAL_STATE = 0
+	// TRANSACTION_STATE =1
+	// DEPOSIT_STATE=2
+	// WITHDRAW_STATE =3
+	// TRANSFER_STATE =4
+	// WRONG_INPUT_STATE=5
 )
 
-var state int = TRANSACTION_STATE
+// var state int = TRANSACTION_STATE
 
 type User struct  {
 	userName string
@@ -88,7 +88,7 @@ func serverSideProtocol(connection net.Conn){
 			fmt.Println("Error reading: " , err.Error() )
 		}
 
-		var msg = string(buffer[:mLen])
+		var msg string = string(buffer[:mLen])
 
 		//if no errors then display the contents of message
 		fmt.Println("Received: ", msg)
@@ -100,25 +100,34 @@ func serverSideProtocol(connection net.Conn){
 		_, err =connection.Write([]byte(output))
 
 }
-connection.Close()
+ connection.Close()
 
 }
 
 func transactionStates(msg string) string  {
 	//write the contents of buffer back to the connection
 	var theOutput string 
+	// fmt.Println("iamhere")
+
+	transactionOperation, amount, err := sharedStringsFunc.SplitString(msg)
+	if err !=nil{
+		theOutput ="wrong transaction option!"
+	}
 	
 	//check what user wants to do 
-	if strings.Contains("Deposit", msg){
+	if transactionOperation =="deposit"{
 		//TODO: deposit money
-		theOutput= "Deposited"
-	} else if strings.Contains("Withdraw", msg ){
+		
+		theOutput= amount
+	} else if transactionOperation =="withdraw"{
 		//TODO: withdraw money
-		theOutput ="Withdrawed"
-	} else if strings.Contains("Transfer", msg ){
+		theOutput= amount
+	} else if transactionOperation =="transfer"{
+		fmt.Println(amount +"this is println")
+		transferAmount, user := sharedStringsFunc.SplitAtSpace(amount)
 		//TODO: transfer money
-		theOutput ="Transfered"
-	}	else{
+		theOutput= transferAmount +"to" +user
+	}else{
 		theOutput ="wrong transaction option!"
 	}
 
