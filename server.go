@@ -12,6 +12,7 @@ import (
 	"net"
 	"os"
 	"transaction-app/sharedStringsFunc"
+	"transaction-app/transactionOperations"
 )
 
 const (
@@ -119,29 +120,30 @@ func transactionStates(msg string) string  {
 		//TODO: deposit money
 		amount, err := sharedStringsFunc.StringToFloat(amountInString)
 		if err != nil {
-			theOutput= "your amount cannot be processed"
+			theOutput= "your transaction cannot be processed"
 		}
 		fmt.Println(amount)
-		theOutput= amountInString
+		theOutput= transactionOperations.DepositMoney("userC", amount)
 
 	} else if transactionOperation =="withdraw"{
 		//TODO: withdraw money
 		amount, err := sharedStringsFunc.StringToFloat(amountInString)
 		if err != nil {
-			theOutput= "your amount cannot be processed"
+			theOutput= "your transaction cannot be processed"
 		}
 		fmt.Println(amount)
-		theOutput= amountInString
+		theOutput= transactionOperations.WithdrawMoney("userC", amount)
 
 	} else if transactionOperation =="transfer"{
 		transferAmount, user := sharedStringsFunc.SplitAtSpace(amountInString)
 		amount, err := sharedStringsFunc.StringToFloat(transferAmount)
 		if err != nil {
-			theOutput= "your amount cannot be processed"
+			theOutput= "your transaction cannot be processed"
 		}
 		fmt.Println(amount)
 		//TODO: transfer money
-		theOutput= transferAmount +"to" +user
+		theOutput= transactionOperations.TransferMoney("userC", user, amount)
+
 
 	}else{
 		theOutput ="wrong transaction option!"
